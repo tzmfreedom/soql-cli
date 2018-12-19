@@ -1,0 +1,25 @@
+# soql-cli
+
+Salesforce SOQL cli tool
+
+## Installation
+
+For Golang User
+```bash
+$ go get -u github.com/tzmfreedom/soql-cli
+```
+
+## Usage
+
+```bash
+$ soql -u {USERNAME} -p {PASSWORD} -e {ENDPOINT}
+```
+
+## Contribute
+
+Just send pull request if needed or fill an issue!
+
+## License
+
+The MIT License See [LICENSE](https://github.com/tzmfreedom/soql-cli/blob/master/LICENSE) file.
+
