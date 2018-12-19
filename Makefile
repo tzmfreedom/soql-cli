@@ -23,7 +23,7 @@ format: import
 .PHONY: import
 import:
 ifneq ($(shell command -v goimports 2> /dev/null),)
-	@goimports -w .
+	@goimports -w main.go
 endif
 
 .PHONY: dep
