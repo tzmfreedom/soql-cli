@@ -3,6 +3,7 @@ SRCS := $(shell find . -type d -name vendor -prune -o -type f -name "*.go" -prin
 VERSION := 0.1.0
 LDFLAGS := -ldflags="-s -w -X \"main.Version=$(VERSION)\""
 DIST_DIRS := find * -type d -exec
+ANTLR := java -Xmx500M -cp "/usr/local/lib/antlr-4.7.1-complete.jar:$(CLASSPATH)" org.antlr.v4.Tool
 
 .PHONY: run
 run: format
@@ -54,3 +55,6 @@ dist:
 	$(DIST_DIRS) cp ../README.md {} \; && \
 	$(DIST_DIRS) tar zcf $(NAME)-$(VERSION)-{}.tar.gz {} \;
 
+.PHONY: generate
+generate:
+	$(ANTLR) -Dlanguage=Go -visitor soql.g4
