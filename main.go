@@ -9,6 +9,7 @@ import (
 	"github.com/chzyer/readline"
 	"github.com/k0kubun/pp"
 	"github.com/tzmfreedom/go-soapforce"
+	"github.com/tzmfreedom/soql-cli/parser"
 	"github.com/xwb1989/sqlparser"
 	"github.com/olekukonko/tablewriter"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -133,4 +134,169 @@ OPTIONS:
 		Password: password,
 		Endpoint: *endpoint,
 	}
+}
+
+func ParseFile(f string) (interface{}, error) {
+	input, err := antlr.NewFileStream(f)
+	if err != nil {
+		return nil, err
+	}
+	return parse(input), nil
+}
+
+func ParseString(data string) interface{} {
+	input := antlr.NewInputStream(data)
+	return parse(input)
+}
+
+func parse(input antlr.CharStream) interface{} {
+	lexer := parser.NewsoqlLexer(input)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	p := parser.NewsoqlParser(stream)
+	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+	p.BuildParseTrees = true
+	tree := p.Query()
+	return tree.Accept(&SoqlBuilder{})
+}
+
+type Select struct {
+	Fields []*Field
+	Where []*Where
+}
+
+type Field struct {
+	Name []string
+}
+
+type Where struct{}
+
+type SoqlBuilder struct {
+	*antlr.BaseParseTreeVisitor
+}
+
+func (v *SoqlBuilder) VisitQuery(ctx *parser.QueryContext) interface{} {
+	selectClause := ctx.SelectClause().Accept(v)
+	return selectClause
+}
+
+func (v *SoqlBuilder) VisitSelectClause(ctx *parser.SelectClauseContext) interface{} {
+	return ctx.FieldList().Accept(v)
+}
+
+func (v *SoqlBuilder) VisitFieldList(ctx *parser.FieldListContext) interface{} {
+	selectFields := ctx.AllSelectField()
+	fields := make([]*Field, len(selectFields))
+	for i, f := range selectFields {
+		fields[i] = f.Accept(v).(*Field)
+	}
+	return fields
+}
+
+func (v *SoqlBuilder) VisitSelectField(ctx *parser.SelectFieldContext) interface{} {
+	if f := ctx.SoqlField(); f != nil {
+		return f.Accept(v)
+	}
+	if f := ctx.Subquery(); f != nil {
+		return f.Accept(v)
+	}
+	return nil
+}
+
+func (v *SoqlBuilder) VisitFromClause(ctx *parser.FromClauseContext) interface{} {
+	return ctx.ApexIdentifier().GetText()
+}
+
+func (v *SoqlBuilder) VisitFilterScope(ctx *parser.FilterScopeContext) interface{} {
+	return nil
+}
+
+func (v *SoqlBuilder) VisitSoqlFieldReference(ctx *parser.SoqlFieldReferenceContext) interface{} {
+	identifiers := ctx.AllApexIdentifier()
+	names := make([]string, len(identifiers))
+	for i, ident := range identifiers {
+		names[i] = ident.GetText()
+	}
+	return names
+}
+
+func (v *SoqlBuilder) VisitSoqlFunctionCall(ctx *parser.SoqlFunctionCallContext) interface{} {
+	funcName := ctx.ApexIdentifier().GetText()
+	fields := ctx.AllSoqlField()
+	args := make([]*Field, len(fields))
+	for i, f := range fields {
+		args[i] = f.Accept(v).(*Field)
+	}
+	return nil
+}
+
+func (v *SoqlBuilder) VisitSubquery(ctx *parser.SubqueryContext) interface{} {
+	return ctx.Query().Accept(v)
+}
+
+func (v *SoqlBuilder) VisitWhereClause(ctx *parser.WhereClauseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitWhereFields(ctx *parser.WhereFieldsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitWhereField(ctx *parser.WhereFieldContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitLimitClause(ctx *parser.LimitClauseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitOrderClause(ctx *parser.OrderClauseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitSoqlValue(ctx *parser.SoqlValueContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitWithClause(ctx *parser.WithClauseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitSoqlFilteringExpression(ctx *parser.SoqlFilteringExpressionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitGroupClause(ctx *parser.GroupClauseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitHavingConditionExpression(ctx *parser.HavingConditionExpressionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitOffsetClause(ctx *parser.OffsetClauseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitViewClause(ctx *parser.ViewClauseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitSoslLiteral(ctx *parser.SoslLiteralContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitSoslQuery(ctx *parser.SoslQueryContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitSoslReturningObject(ctx *parser.SoslReturningObjectContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitApexIdentifier(ctx *parser.ApexIdentifierContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *SoqlBuilder) VisitLiteral(ctx *parser.LiteralContext) interface{} {
+	return v.VisitChildren(ctx)
 }
