@@ -19,12 +19,12 @@ build: format
 
 .PHONY: format
 format: import
-	@gofmt -w .
+	@gofmt -w main.go main_test.go statement_builder.go evaluator.go
 
 .PHONY: import
 import:
 ifneq ($(shell command -v goimports 2> /dev/null),)
-	@goimports -w main.go
+	@goimports -w .
 endif
 
 .PHONY: dep

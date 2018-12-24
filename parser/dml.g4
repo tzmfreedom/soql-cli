@@ -7,7 +7,7 @@ statement
     ;
 
 insertStatement
-    : INSERT sobject '(' field (',' field)* ')' VALUES '(' literal (',' literal)* ')'
+    : INSERT INTO? sobject '(' field (',' field)* ')' VALUES '(' literal (',' literal)* ')'
     ;
 
 updateStatement
@@ -37,6 +37,7 @@ literal
 QUOTE         : '\'';
 FROM          : F R O M;
 INSERT        : I N S E R T;
+INTO          : I N T O;
 UPDATE        : U P D A T E;
 DELETE        : D E L E T E;
 WHERE         : W H E R E;
@@ -122,7 +123,7 @@ WS  :  [ \t\r\n\u000C]+ -> skip
     ;
 
 WhereClause
-    : WHERE [ \t\r\n=!<>a-zA-Z0-9_]+
+    : WHERE [ \t\r\n=!<>a-zA-Z0-9_']+
     ;
 
 fragment A : [aA];

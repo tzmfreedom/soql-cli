@@ -16,36 +16,38 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 23, 77, 4,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 24, 80, 4,
 	2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7, 4,
-	8, 9, 8, 3, 2, 3, 2, 3, 2, 5, 2, 20, 10, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 7, 3, 28, 10, 3, 12, 3, 14, 3, 31, 11, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 7, 3, 39, 10, 3, 12, 3, 14, 3, 42, 11, 3, 3, 3, 3, 3, 3,
-	4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 7, 4, 57,
-	10, 4, 12, 4, 14, 4, 60, 11, 4, 3, 4, 5, 4, 63, 10, 4, 3, 5, 3, 5, 3, 5,
-	3, 5, 5, 5, 69, 10, 5, 3, 6, 3, 6, 3, 7, 3, 7, 3, 8, 3, 8, 3, 8, 2, 2,
-	9, 2, 4, 6, 8, 10, 12, 14, 2, 3, 4, 2, 16, 18, 20, 21, 2, 76, 2, 19, 3,
-	2, 2, 2, 4, 21, 3, 2, 2, 2, 6, 45, 3, 2, 2, 2, 8, 64, 3, 2, 2, 2, 10, 70,
-	3, 2, 2, 2, 12, 72, 3, 2, 2, 2, 14, 74, 3, 2, 2, 2, 16, 20, 5, 4, 3, 2,
-	17, 20, 5, 6, 4, 2, 18, 20, 5, 8, 5, 2, 19, 16, 3, 2, 2, 2, 19, 17, 3,
-	2, 2, 2, 19, 18, 3, 2, 2, 2, 20, 3, 3, 2, 2, 2, 21, 22, 7, 9, 2, 2, 22,
-	23, 5, 10, 6, 2, 23, 24, 7, 3, 2, 2, 24, 29, 5, 12, 7, 2, 25, 26, 7, 4,
-	2, 2, 26, 28, 5, 12, 7, 2, 27, 25, 3, 2, 2, 2, 28, 31, 3, 2, 2, 2, 29,
-	27, 3, 2, 2, 2, 29, 30, 3, 2, 2, 2, 30, 32, 3, 2, 2, 2, 31, 29, 3, 2, 2,
-	2, 32, 33, 7, 5, 2, 2, 33, 34, 7, 14, 2, 2, 34, 35, 7, 3, 2, 2, 35, 40,
-	5, 14, 8, 2, 36, 37, 7, 4, 2, 2, 37, 39, 5, 14, 8, 2, 38, 36, 3, 2, 2,
-	2, 39, 42, 3, 2, 2, 2, 40, 38, 3, 2, 2, 2, 40, 41, 3, 2, 2, 2, 41, 43,
-	3, 2, 2, 2, 42, 40, 3, 2, 2, 2, 43, 44, 7, 5, 2, 2, 44, 5, 3, 2, 2, 2,
-	45, 46, 7, 10, 2, 2, 46, 47, 5, 10, 6, 2, 47, 48, 7, 15, 2, 2, 48, 49,
-	5, 12, 7, 2, 49, 50, 7, 6, 2, 2, 50, 58, 5, 14, 8, 2, 51, 52, 7, 4, 2,
-	2, 52, 53, 5, 12, 7, 2, 53, 54, 7, 6, 2, 2, 54, 55, 5, 14, 8, 2, 55, 57,
-	3, 2, 2, 2, 56, 51, 3, 2, 2, 2, 57, 60, 3, 2, 2, 2, 58, 56, 3, 2, 2, 2,
-	58, 59, 3, 2, 2, 2, 59, 62, 3, 2, 2, 2, 60, 58, 3, 2, 2, 2, 61, 63, 7,
-	23, 2, 2, 62, 61, 3, 2, 2, 2, 62, 63, 3, 2, 2, 2, 63, 7, 3, 2, 2, 2, 64,
-	65, 7, 11, 2, 2, 65, 66, 7, 8, 2, 2, 66, 68, 5, 10, 6, 2, 67, 69, 7, 23,
-	2, 2, 68, 67, 3, 2, 2, 2, 68, 69, 3, 2, 2, 2, 69, 9, 3, 2, 2, 2, 70, 71,
-	7, 19, 2, 2, 71, 11, 3, 2, 2, 2, 72, 73, 7, 19, 2, 2, 73, 13, 3, 2, 2,
-	2, 74, 75, 9, 2, 2, 2, 75, 15, 3, 2, 2, 2, 8, 19, 29, 40, 58, 62, 68,
+	8, 9, 8, 3, 2, 3, 2, 3, 2, 5, 2, 20, 10, 2, 3, 3, 3, 3, 5, 3, 24, 10, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 3, 31, 10, 3, 12, 3, 14, 3, 34, 11, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 3, 42, 10, 3, 12, 3, 14, 3, 45,
+	11, 3, 3, 3, 3, 3, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4,
+	3, 4, 3, 4, 7, 4, 60, 10, 4, 12, 4, 14, 4, 63, 11, 4, 3, 4, 5, 4, 66, 10,
+	4, 3, 5, 3, 5, 3, 5, 3, 5, 5, 5, 72, 10, 5, 3, 6, 3, 6, 3, 7, 3, 7, 3,
+	8, 3, 8, 3, 8, 2, 2, 9, 2, 4, 6, 8, 10, 12, 14, 2, 3, 4, 2, 17, 19, 21,
+	22, 2, 80, 2, 19, 3, 2, 2, 2, 4, 21, 3, 2, 2, 2, 6, 48, 3, 2, 2, 2, 8,
+	67, 3, 2, 2, 2, 10, 73, 3, 2, 2, 2, 12, 75, 3, 2, 2, 2, 14, 77, 3, 2, 2,
+	2, 16, 20, 5, 4, 3, 2, 17, 20, 5, 6, 4, 2, 18, 20, 5, 8, 5, 2, 19, 16,
+	3, 2, 2, 2, 19, 17, 3, 2, 2, 2, 19, 18, 3, 2, 2, 2, 20, 3, 3, 2, 2, 2,
+	21, 23, 7, 9, 2, 2, 22, 24, 7, 10, 2, 2, 23, 22, 3, 2, 2, 2, 23, 24, 3,
+	2, 2, 2, 24, 25, 3, 2, 2, 2, 25, 26, 5, 10, 6, 2, 26, 27, 7, 3, 2, 2, 27,
+	32, 5, 12, 7, 2, 28, 29, 7, 4, 2, 2, 29, 31, 5, 12, 7, 2, 30, 28, 3, 2,
+	2, 2, 31, 34, 3, 2, 2, 2, 32, 30, 3, 2, 2, 2, 32, 33, 3, 2, 2, 2, 33, 35,
+	3, 2, 2, 2, 34, 32, 3, 2, 2, 2, 35, 36, 7, 5, 2, 2, 36, 37, 7, 15, 2, 2,
+	37, 38, 7, 3, 2, 2, 38, 43, 5, 14, 8, 2, 39, 40, 7, 4, 2, 2, 40, 42, 5,
+	14, 8, 2, 41, 39, 3, 2, 2, 2, 42, 45, 3, 2, 2, 2, 43, 41, 3, 2, 2, 2, 43,
+	44, 3, 2, 2, 2, 44, 46, 3, 2, 2, 2, 45, 43, 3, 2, 2, 2, 46, 47, 7, 5, 2,
+	2, 47, 5, 3, 2, 2, 2, 48, 49, 7, 11, 2, 2, 49, 50, 5, 10, 6, 2, 50, 51,
+	7, 16, 2, 2, 51, 52, 5, 12, 7, 2, 52, 53, 7, 6, 2, 2, 53, 61, 5, 14, 8,
+	2, 54, 55, 7, 4, 2, 2, 55, 56, 5, 12, 7, 2, 56, 57, 7, 6, 2, 2, 57, 58,
+	5, 14, 8, 2, 58, 60, 3, 2, 2, 2, 59, 54, 3, 2, 2, 2, 60, 63, 3, 2, 2, 2,
+	61, 59, 3, 2, 2, 2, 61, 62, 3, 2, 2, 2, 62, 65, 3, 2, 2, 2, 63, 61, 3,
+	2, 2, 2, 64, 66, 7, 24, 2, 2, 65, 64, 3, 2, 2, 2, 65, 66, 3, 2, 2, 2, 66,
+	7, 3, 2, 2, 2, 67, 68, 7, 12, 2, 2, 68, 69, 7, 8, 2, 2, 69, 71, 5, 10,
+	6, 2, 70, 72, 7, 24, 2, 2, 71, 70, 3, 2, 2, 2, 71, 72, 3, 2, 2, 2, 72,
+	9, 3, 2, 2, 2, 73, 74, 7, 20, 2, 2, 74, 11, 3, 2, 2, 2, 75, 76, 7, 20,
+	2, 2, 76, 13, 3, 2, 2, 2, 77, 78, 9, 2, 2, 2, 78, 15, 3, 2, 2, 2, 9, 19,
+	23, 32, 43, 61, 65, 71,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
@@ -54,8 +56,8 @@ var literalNames = []string{
 	"", "'('", "','", "')'", "'='", "'''",
 }
 var symbolicNames = []string{
-	"", "", "", "", "", "QUOTE", "FROM", "INSERT", "UPDATE", "DELETE", "WHERE",
-	"ON", "VALUES", "SET", "StringLiteral", "BooleanLiteral", "NullLiteral",
+	"", "", "", "", "", "QUOTE", "FROM", "INSERT", "INTO", "UPDATE", "DELETE",
+	"WHERE", "ON", "VALUES", "SET", "StringLiteral", "BooleanLiteral", "NullLiteral",
 	"Identifier", "IntegerLiteral", "FloatingPointLiteral", "WS", "WhereClause",
 }
 
@@ -99,20 +101,21 @@ const (
 	dmlParserQUOTE                = 5
 	dmlParserFROM                 = 6
 	dmlParserINSERT               = 7
-	dmlParserUPDATE               = 8
-	dmlParserDELETE               = 9
-	dmlParserWHERE                = 10
-	dmlParserON                   = 11
-	dmlParserVALUES               = 12
-	dmlParserSET                  = 13
-	dmlParserStringLiteral        = 14
-	dmlParserBooleanLiteral       = 15
-	dmlParserNullLiteral          = 16
-	dmlParserIdentifier           = 17
-	dmlParserIntegerLiteral       = 18
-	dmlParserFloatingPointLiteral = 19
-	dmlParserWS                   = 20
-	dmlParserWhereClause          = 21
+	dmlParserINTO                 = 8
+	dmlParserUPDATE               = 9
+	dmlParserDELETE               = 10
+	dmlParserWHERE                = 11
+	dmlParserON                   = 12
+	dmlParserVALUES               = 13
+	dmlParserSET                  = 14
+	dmlParserStringLiteral        = 15
+	dmlParserBooleanLiteral       = 16
+	dmlParserNullLiteral          = 17
+	dmlParserIdentifier           = 18
+	dmlParserIntegerLiteral       = 19
+	dmlParserFloatingPointLiteral = 20
+	dmlParserWS                   = 21
+	dmlParserWhereClause          = 22
 )
 
 // dmlParser rules.
@@ -378,6 +381,10 @@ func (s *InsertStatementContext) Literal(i int) ILiteralContext {
 	return t.(ILiteralContext)
 }
 
+func (s *InsertStatementContext) INTO() antlr.TerminalNode {
+	return s.GetToken(dmlParserINTO, 0)
+}
+
 func (s *InsertStatementContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -434,72 +441,83 @@ func (p *dmlParser) InsertStatement() (localctx IInsertStatementContext) {
 		p.SetState(19)
 		p.Match(dmlParserINSERT)
 	}
+	p.SetState(21)
+	p.GetErrorHandler().Sync(p)
+	_la = p.GetTokenStream().LA(1)
+
+	if _la == dmlParserINTO {
+		{
+			p.SetState(20)
+			p.Match(dmlParserINTO)
+		}
+
+	}
 	{
-		p.SetState(20)
+		p.SetState(23)
 		p.Sobject()
 	}
 	{
-		p.SetState(21)
+		p.SetState(24)
 		p.Match(dmlParserT__0)
 	}
 	{
-		p.SetState(22)
+		p.SetState(25)
 		p.Field()
 	}
-	p.SetState(27)
+	p.SetState(30)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == dmlParserT__1 {
 		{
-			p.SetState(23)
+			p.SetState(26)
 			p.Match(dmlParserT__1)
 		}
 		{
-			p.SetState(24)
+			p.SetState(27)
 			p.Field()
 		}
 
-		p.SetState(29)
+		p.SetState(32)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(30)
+		p.SetState(33)
 		p.Match(dmlParserT__2)
 	}
 	{
-		p.SetState(31)
+		p.SetState(34)
 		p.Match(dmlParserVALUES)
 	}
 	{
-		p.SetState(32)
+		p.SetState(35)
 		p.Match(dmlParserT__0)
 	}
 	{
-		p.SetState(33)
+		p.SetState(36)
 		p.Literal()
 	}
-	p.SetState(38)
+	p.SetState(41)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == dmlParserT__1 {
 		{
-			p.SetState(34)
+			p.SetState(37)
 			p.Match(dmlParserT__1)
 		}
 		{
-			p.SetState(35)
+			p.SetState(38)
 			p.Literal()
 		}
 
-		p.SetState(40)
+		p.SetState(43)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(41)
+		p.SetState(44)
 		p.Match(dmlParserT__2)
 	}
 
@@ -665,62 +683,62 @@ func (p *dmlParser) UpdateStatement() (localctx IUpdateStatementContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(43)
+		p.SetState(46)
 		p.Match(dmlParserUPDATE)
 	}
 	{
-		p.SetState(44)
+		p.SetState(47)
 		p.Sobject()
 	}
 	{
-		p.SetState(45)
+		p.SetState(48)
 		p.Match(dmlParserSET)
 	}
 	{
-		p.SetState(46)
+		p.SetState(49)
 		p.Field()
 	}
 	{
-		p.SetState(47)
+		p.SetState(50)
 		p.Match(dmlParserT__3)
 	}
 	{
-		p.SetState(48)
+		p.SetState(51)
 		p.Literal()
 	}
-	p.SetState(56)
+	p.SetState(59)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == dmlParserT__1 {
 		{
-			p.SetState(49)
+			p.SetState(52)
 			p.Match(dmlParserT__1)
 		}
 		{
-			p.SetState(50)
+			p.SetState(53)
 			p.Field()
 		}
 		{
-			p.SetState(51)
+			p.SetState(54)
 			p.Match(dmlParserT__3)
 		}
 		{
-			p.SetState(52)
+			p.SetState(55)
 			p.Literal()
 		}
 
-		p.SetState(58)
+		p.SetState(61)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
-	p.SetState(60)
+	p.SetState(63)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == dmlParserWhereClause {
 		{
-			p.SetState(59)
+			p.SetState(62)
 			p.Match(dmlParserWhereClause)
 		}
 
@@ -842,24 +860,24 @@ func (p *dmlParser) DeleteStatement() (localctx IDeleteStatementContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(62)
+		p.SetState(65)
 		p.Match(dmlParserDELETE)
 	}
 	{
-		p.SetState(63)
+		p.SetState(66)
 		p.Match(dmlParserFROM)
 	}
 	{
-		p.SetState(64)
+		p.SetState(67)
 		p.Sobject()
 	}
-	p.SetState(66)
+	p.SetState(69)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == dmlParserWhereClause {
 		{
-			p.SetState(65)
+			p.SetState(68)
 			p.Match(dmlParserWhereClause)
 		}
 
@@ -962,7 +980,7 @@ func (p *dmlParser) Sobject() (localctx ISobjectContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(68)
+		p.SetState(71)
 		p.Match(dmlParserIdentifier)
 	}
 
@@ -1063,7 +1081,7 @@ func (p *dmlParser) Field() (localctx IFieldContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(70)
+		p.SetState(73)
 		p.Match(dmlParserIdentifier)
 	}
 
@@ -1181,7 +1199,7 @@ func (p *dmlParser) Literal() (localctx ILiteralContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(72)
+		p.SetState(75)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<dmlParserStringLiteral)|(1<<dmlParserBooleanLiteral)|(1<<dmlParserNullLiteral)|(1<<dmlParserIntegerLiteral)|(1<<dmlParserFloatingPointLiteral))) != 0) {

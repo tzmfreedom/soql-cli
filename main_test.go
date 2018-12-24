@@ -13,6 +13,19 @@ func TestParser(t *testing.T) {
 		Expected *Statement
 	}{
 		{
+			`INSERT INTO Account(Name, Field1__c, Field2__c, Field3__c) VALUES ('foo', 1, 1.23, true)`,
+			&Statement{
+				Type:    "INSERT",
+				Sobject: "Account",
+				Values: map[string]string{
+					"Name":      "foo",
+					"Field1__c": "1",
+					"Field2__c": "1.23",
+					"Field3__c": "true",
+				},
+			},
+		},
+		{
 			`INSERT Account(Name, Field1__c, Field2__c, Field3__c) VALUES ('foo', 1, 1.23, true)`,
 			&Statement{
 				Type:    "INSERT",
