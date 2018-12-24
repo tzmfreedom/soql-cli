@@ -57,4 +57,4 @@ dist:
 
 .PHONY: generate
 generate:
-	$(ANTLR) -Dlanguage=Go -visitor soql.g4
+	$(ANTLR) -Dlanguage=Go -visitor ./parser/dml.g4

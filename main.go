@@ -6,13 +6,13 @@ import (
 	"os"
 
 	"github.com/Songmu/prompter"
+	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/chzyer/readline"
 	"github.com/k0kubun/pp"
+	"github.com/olekukonko/tablewriter"
 	"github.com/tzmfreedom/go-soapforce"
 	"github.com/tzmfreedom/soql-cli/parser"
 	"github.com/xwb1989/sqlparser"
-	"github.com/olekukonko/tablewriter"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
 )
 
 var (
@@ -150,153 +150,90 @@ func ParseString(data string) interface{} {
 }
 
 func parse(input antlr.CharStream) interface{} {
-	lexer := parser.NewsoqlLexer(input)
+	lexer := parser.NewdmlLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
-	p := parser.NewsoqlParser(stream)
+	p := parser.NewdmlParser(stream)
 	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 	p.BuildParseTrees = true
-	tree := p.Query()
-	return tree.Accept(&SoqlBuilder{})
+	tree := p.Statement()
+	return tree.Accept(&StatementBuilder{})
 }
 
-type Select struct {
-	Fields []*Field
-	Where []*Where
+type Statement struct {
+	Type    string
+	Sobject string
+	Values  map[string]string
+	Where   string
 }
 
-type Field struct {
-	Name []string
+type StatementBuilder struct {
+	*parser.BasedmlVisitor
 }
 
-type Where struct{}
-
-type SoqlBuilder struct {
-	*antlr.BaseParseTreeVisitor
-}
-
-func (v *SoqlBuilder) VisitQuery(ctx *parser.QueryContext) interface{} {
-	selectClause := ctx.SelectClause().Accept(v)
-	return selectClause
-}
-
-func (v *SoqlBuilder) VisitSelectClause(ctx *parser.SelectClauseContext) interface{} {
-	return ctx.FieldList().Accept(v)
-}
-
-func (v *SoqlBuilder) VisitFieldList(ctx *parser.FieldListContext) interface{} {
-	selectFields := ctx.AllSelectField()
-	fields := make([]*Field, len(selectFields))
-	for i, f := range selectFields {
-		fields[i] = f.Accept(v).(*Field)
+func (v *StatementBuilder) VisitStatement(ctx *parser.StatementContext) interface{} {
+	if stmt := ctx.InsertStatement(); stmt != nil {
+		return stmt.Accept(v)
 	}
-	return fields
-}
-
-func (v *SoqlBuilder) VisitSelectField(ctx *parser.SelectFieldContext) interface{} {
-	if f := ctx.SoqlField(); f != nil {
-		return f.Accept(v)
+	if stmt := ctx.UpdateStatement(); stmt != nil {
+		return stmt.Accept(v)
 	}
-	if f := ctx.Subquery(); f != nil {
-		return f.Accept(v)
+	return ctx.DeleteStatement().Accept(v)
+}
+
+func (v *StatementBuilder) VisitInsertStatement(ctx *parser.InsertStatementContext) interface{} {
+	values := map[string]string{}
+	for i, f := range ctx.AllField() {
+		key := f.Accept(v).(string)
+		val := ctx.Literal(i).Accept(v).(string)
+		values[key] = val
 	}
-	return nil
-}
-
-func (v *SoqlBuilder) VisitFromClause(ctx *parser.FromClauseContext) interface{} {
-	return ctx.ApexIdentifier().GetText()
-}
-
-func (v *SoqlBuilder) VisitFilterScope(ctx *parser.FilterScopeContext) interface{} {
-	return nil
-}
-
-func (v *SoqlBuilder) VisitSoqlFieldReference(ctx *parser.SoqlFieldReferenceContext) interface{} {
-	identifiers := ctx.AllApexIdentifier()
-	names := make([]string, len(identifiers))
-	for i, ident := range identifiers {
-		names[i] = ident.GetText()
+	sobject := ctx.Sobject().Accept(v).(string)
+	return &Statement{
+		Type:    "INSERT",
+		Sobject: sobject,
+		Values:  values,
 	}
-	return names
 }
 
-func (v *SoqlBuilder) VisitSoqlFunctionCall(ctx *parser.SoqlFunctionCallContext) interface{} {
-	funcName := ctx.ApexIdentifier().GetText()
-	fields := ctx.AllSoqlField()
-	args := make([]*Field, len(fields))
-	for i, f := range fields {
-		args[i] = f.Accept(v).(*Field)
+func (v *StatementBuilder) VisitUpdateStatement(ctx *parser.UpdateStatementContext) interface{} {
+	values := map[string]string{}
+	for i, f := range ctx.AllField() {
+		key := f.Accept(v).(string)
+		val := ctx.Literal(i).Accept(v).(string)
+		values[key] = val
 	}
-	return nil
+	sobject := ctx.Sobject().Accept(v).(string)
+	where := ctx.WhereClause().GetText()
+	return &Statement{
+		Type:    "UPDATE",
+		Sobject: sobject,
+		Values:  values,
+		Where:   where,
+	}
 }
 
-func (v *SoqlBuilder) VisitSubquery(ctx *parser.SubqueryContext) interface{} {
-	return ctx.Query().Accept(v)
+func (v *StatementBuilder) VisitDeleteStatement(ctx *parser.DeleteStatementContext) interface{} {
+	sobject := ctx.Sobject().Accept(v).(string)
+	where := ctx.WhereClause().GetText()
+	return &Statement{
+		Type:    "DELETE",
+		Sobject: sobject,
+		Where:   where,
+	}
 }
 
-func (v *SoqlBuilder) VisitWhereClause(ctx *parser.WhereClauseContext) interface{} {
-	return v.VisitChildren(ctx)
+func (v *StatementBuilder) VisitSobject(ctx *parser.SobjectContext) interface{} {
+	return ctx.Identifier().GetText()
 }
 
-func (v *SoqlBuilder) VisitWhereFields(ctx *parser.WhereFieldsContext) interface{} {
-	return v.VisitChildren(ctx)
+func (v *StatementBuilder) VisitField(ctx *parser.FieldContext) interface{} {
+	return ctx.Identifier().GetText()
 }
 
-func (v *SoqlBuilder) VisitWhereField(ctx *parser.WhereFieldContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitLimitClause(ctx *parser.LimitClauseContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitOrderClause(ctx *parser.OrderClauseContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitSoqlValue(ctx *parser.SoqlValueContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitWithClause(ctx *parser.WithClauseContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitSoqlFilteringExpression(ctx *parser.SoqlFilteringExpressionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitGroupClause(ctx *parser.GroupClauseContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitHavingConditionExpression(ctx *parser.HavingConditionExpressionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitOffsetClause(ctx *parser.OffsetClauseContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitViewClause(ctx *parser.ViewClauseContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitSoslLiteral(ctx *parser.SoslLiteralContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitSoslQuery(ctx *parser.SoslQueryContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitSoslReturningObject(ctx *parser.SoslReturningObjectContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitApexIdentifier(ctx *parser.ApexIdentifierContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *SoqlBuilder) VisitLiteral(ctx *parser.LiteralContext) interface{} {
-	return v.VisitChildren(ctx)
+func (v *StatementBuilder) VisitLiteral(ctx *parser.LiteralContext) interface{} {
+	if s := ctx.StringLiteral(); s != nil {
+		str := s.GetText()
+		return str[1 : len(str)-1]
+	}
+	return ctx.GetText()
 }
