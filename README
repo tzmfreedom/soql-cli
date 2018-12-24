@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tzmfreedom/soql-cli.svg?branch=master)](https://travis-ci.org/tzmfreedom/soql-cli)
+
 # soql-cli
 
 Salesforce SOQL cli tool
