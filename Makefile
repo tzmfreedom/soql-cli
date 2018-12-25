@@ -58,3 +58,8 @@ dist:
 .PHONY: generate
 generate:
 	$(ANTLR) -Dlanguage=Go -visitor ./parser/dml.g4
+
+.PHONY: tag
+tag:
+	git tag v$(VERSION) -f
+	git push origin v$(VERSION) -f
