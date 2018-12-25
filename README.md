@@ -6,6 +6,24 @@ Salesforce SOQL cli tool
 
 ## Installation
 
+For Linux
+```bash
+$ curl -sL https://install.freedom-man.com/soql | bash
+```
+
+For Windows
+```bash
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile ^
+  -InputFormat None -ExecutionPolicy Bypass ^
+  -Command "iex ((New-Object System.Net.WebClient).DownloadString('http://install.freedom-man.com/soql.ps1'))" ^
+  && SET "PATH=%PATH%;%APPDATA%\land\bin"
+```
+
+For Powershell
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('http://install.freedom-man.com/soql.ps1'))
+```
+
 For Golang User
 ```bash
 $ go get -u github.com/tzmfreedom/soql-cli
