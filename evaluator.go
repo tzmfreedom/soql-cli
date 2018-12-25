@@ -22,6 +22,10 @@ type DefaultEvaluator struct {
 }
 
 func (e *DefaultEvaluator) Select(q string) error {
+	q, err := expandWildcard(q, e.Client)
+	if err != nil {
+		return err
+	}
 	r, err := e.Client.Query(q)
 	if err != nil {
 		return err
@@ -138,6 +142,10 @@ type DryRunner struct {
 }
 
 func (e *DryRunner) Select(q string) error {
+	q, err := expandWildcard(q, e.Client)
+	if err != nil {
+		return err
+	}
 	r, err := e.Client.Query(q)
 	if err != nil {
 		return err
@@ -227,4 +235,22 @@ func getFields(q string) ([]string, error) {
 		trimmedFields[i] = strings.ToUpper(strings.TrimSpace(field))
 	}
 	return trimmedFields, nil
+}
+
+func expandWildcard(original string, c *soapforce.Client) (string, error) {
+	r := regexp.MustCompile(`(?i)SELECT\s+(\*)\s+FROM\s+([a-zA-Z\d_]+)`)
+	matches := r.FindStringSubmatch(strings.TrimSpace(original))
+	if len(matches) == 0 {
+		return original, nil
+	}
+	result, err := c.DescribeSObject(matches[2])
+	if err != nil {
+		return "", err
+	}
+	fields := make([]string, len(result.Fields))
+	for i, f := range result.Fields {
+		fields[i] = f.Name
+	}
+	selectClause := strings.Join(fields, ",")
+	return r.ReplaceAllString(original, fmt.Sprintf("SELECT %s FROM $2", selectClause)), nil
 }

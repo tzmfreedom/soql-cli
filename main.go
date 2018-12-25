@@ -47,6 +47,10 @@ func main() {
 		return
 	}
 
+	repl(evaluator)
+}
+
+func repl(evaluator Evaluator) {
 	l, _ := readline.NewEx(&readline.Config{
 		Prompt:          "\033[31m>>\033[0m ",
 		HistoryFile:     "/tmp/land.tmp",
@@ -75,23 +79,24 @@ func main() {
 }
 
 func getOption() *option {
-	flg := flag.NewFlagSet("lui", flag.ExitOnError)
+	flg := flag.NewFlagSet("soql-cli", flag.ExitOnError)
 	username := flg.String("u", "", "username")
 	endpoint := flg.String("h", "", "hostname")
 	execute := flg.String("e", "", "execute")
-	dryrun := flg.Bool("dryrun", false, "dryrun")
+	dryrun := flg.Bool("d", false, "dryrun")
 	version := flg.Bool("v", false, "version")
 	flg.Usage = func() {
 		fmt.Printf(`NAME:
-   lui - Lightining plaform terminal UI
+   soql - Salesforce Object Query Language CLI
 USAGE:
-   lui [options]
+   soql [options]
 VERSION:
    %s
 OPTIONS:
    -u  username
-   -p  username
-   -e  endpoint (e.g. test.salesforce.com)
+   -h  hostname (e.g. test.salesforce.com)
+   -e  execute command from option
+   -d  dryrun (no write, read only mode)
    -v  print the version
 `, Version)
 		os.Exit(0)
@@ -134,7 +139,7 @@ OPTIONS:
 }
 
 func eval(line string, e Evaluator) error {
-	if matched, _ := regexp.MatchString(`^SELECT\s.*\sFROM\s.*`, line); matched {
+	if matched, _ := regexp.MatchString(`(?i)^SELECT\s.*\sFROM\s.*`, line); matched {
 		e.Select(line)
 		return nil
 	}

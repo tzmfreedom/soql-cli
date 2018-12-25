@@ -7,7 +7,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestParser(t *testing.T) {
+func TestParse(t *testing.T) {
 	testCases := []struct {
 		Code     string
 		Expected *Statement

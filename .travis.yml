@@ -1,4 +1,3 @@
-
 language: go
 go:
 - '1.11'
@@ -8,3 +7,17 @@ install:
 - make deps
 script:
 - make test
+before_deploy:
+- make cross-build
+- make dist
+deploy:
+  provider: releases
+  api_key:
+    secure: F1nWkeEKEtdbfMXeY8NZdKwrGrqdcdwoOJuz1Y6uh4PfnJf2UStqQkBiEaQS1zLw7Odojbpp+yM6rijrIlNg/GBOgGz3XXcaykEC42W5P+Uxa2pPeWsdo60dBnHe38pB4FT5JG/ZQv4PSizxMXnYTcxX1lLi7AWsPZiS2yFj87XCXdR9P1One0IjR+kkc1z4QHUgqVNRwDwHre4A+KCbWvVi54gTg2Ov82b9nM9qPvw9DimvVLJ1wb8kuFmo+M0LM4L+ihrIa2UjbGxwn8N9Q+bBHHtry++m6olOOr5BZWHvB4gQLTFjyln321H5dzKe5o0KwAxcUKWcjjPR784BB+qU11hm2JDqeDdjdc1bTmhubbkYT+8iVAemLnkEFtCBqJ7cmabHZo/4No8T4pWpkSA/bp8/UmyxNZZ3/SRWhypgqRzG383H8DrPKFKzNqfdLTlvM7NBV5kaMnacKOaPpPYmlPaP6xx5agiU5dUf2drW3K3t4mTH1NWx8Q7Rc4hvLtquui9oq0zMk+lc+PZT/xxsxrwlGRAAY3H+GWxObBOUe/UgAvGN352IWn9HLZ52DQUEzGpecBUbxZI9+aootT/WkYzPX3zwPFoUlg34vbdDmWfW3uIUCfqKY902/G+RBbQJGA9zb+At0EHbWFjPlkTJcO6D5K0p8LU+2iMal2w=
+  skip_cleanup: true
+  overwrite: true
+  file_glob: true
+  file: dist/*.{tar.gz,zip}
+  on:
+    repo: tzmfreedom/soql-cli
+    tags: true

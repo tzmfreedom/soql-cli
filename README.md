@@ -14,8 +14,16 @@ $ go get -u github.com/tzmfreedom/soql-cli
 ## Usage
 
 ```bash
-$ soql -u {USERNAME} -p {PASSWORD} -h {ENDPOINT} [--dryrun]
+$ soql -u {USERNAME} -h {ENDPOINT} [-d] [-e {COMMMAND}] [-v]
 ```
+
+|option|description|alternative environment variable|
+|-|-|-|
+|-u|specify salesforce username|SALESFORCE_USERNAME|
+|-d|dryrun mode(no write, read only)||
+|-h|hostname (e.g. test.salesforce.com)|SALESFORCE_ENDPOINT|
+|-e|specify command(batch mode, no interactive)||
+|-v|print version||
 
 Select Query
 ```
@@ -40,6 +48,17 @@ Delete
 Exit console
 ```
 >> exit # or quit
+```
+
+Batch mode
+```
+$ soql -e "SELECT * FROM Account"
+```
+
+DryRun mode
+```
+$ soql -d -e "INSERT INTO Account(Name) VALUES ("foo");
+> no change database
 ```
 
 ## Contribute
