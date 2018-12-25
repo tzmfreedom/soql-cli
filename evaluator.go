@@ -47,7 +47,11 @@ func (e *DefaultEvaluator) Select(q string) error {
 			if fieldName == "ID" {
 				columns = append(columns, record.Id)
 			} else {
-				columns = append(columns, fields[fieldName].(string))
+				value := ""
+				if v := fields[fieldName]; v != nil {
+					value = v.(string)
+				}
+				columns = append(columns, value)
 			}
 		}
 		table.Append(columns)

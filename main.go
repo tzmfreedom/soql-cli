@@ -42,7 +42,7 @@ func main() {
 	if opt.Execute != "" {
 		err := eval(opt.Execute, evaluator)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			fmt.Fprintln(os.Stderr, err.Error())
 		}
 		return
 	}
@@ -61,7 +61,7 @@ func repl(evaluator Evaluator) {
 	for {
 		line, err := l.Readline()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			fmt.Fprintln(os.Stderr, err.Error())
 			continue
 		}
 		line = strings.TrimSpace(line)
@@ -73,7 +73,7 @@ func repl(evaluator Evaluator) {
 		}
 		err = eval(line, evaluator)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			fmt.Fprintln(os.Stderr, err.Error())
 		}
 	}
 }
