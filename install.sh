@@ -60,7 +60,7 @@ elif [ "${UNAME}" = "Linux" ] ; then
   fi
 fi
 
-ARCHIVE_FILE=${NAME}-${VERSION}-${OS}-${ARCH}.tar.gz
+ARCHIVE_FILE=${BIN_NAME}-${VERSION}-${OS}-${ARCH}.tar.gz
 BINARY="https://github.com/${GITHUB_USER}/${NAME}/releases/download/v${VERSION}/${ARCHIVE_FILE}"
 
 cd $TMP_DIR

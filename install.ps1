@@ -7,7 +7,7 @@ If ($Env:PROCESSOR_ARCHITECTURE -match "64") {
 } Else {
   $arch = "386"
 }
-$archive_file = "${name}-${version}-windows-${arch}.zip"
+$archive_file = "${bin_name}-${version}-windows-${arch}.zip"
 $url = "https://github.com/${github_user}/${name}/releases/download/v${version}/${archive_file}"
 $dest_dir = "$Env:APPDATA\${name}"
 
