@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/Songmu/prompter"
-	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/chzyer/readline"
 	"github.com/tzmfreedom/go-soapforce"
 	"github.com/tzmfreedom/soql-cli/parser"
@@ -67,6 +66,12 @@ func repl(evaluator Evaluator) {
 		line = strings.TrimSpace(line)
 		if line == "exit" || line == "quit" {
 			break
+		}
+		if line == `.schema` {
+			// show create table
+		}
+		if line == `.table` {
+			// show database
 		}
 		if line == "" {
 			continue
@@ -143,7 +148,7 @@ func eval(line string, e Evaluator) error {
 		e.Select(line)
 		return nil
 	}
-	stmt := ParseString(line)
+	stmt := parser.ParseString(line)
 	switch stmt.Type {
 	case "INSERT":
 		err := e.Insert(stmt)
@@ -162,27 +167,4 @@ func eval(line string, e Evaluator) error {
 		}
 	}
 	return nil
-}
-
-func ParseFile(f string) (interface{}, error) {
-	input, err := antlr.NewFileStream(f)
-	if err != nil {
-		return nil, err
-	}
-	return parse(input), nil
-}
-
-func ParseString(data string) *Statement {
-	input := antlr.NewInputStream(data)
-	return parse(input)
-}
-
-func parse(input antlr.CharStream) *Statement {
-	lexer := parser.NewdmlLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	p := parser.NewdmlParser(stream)
-	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-	p.BuildParseTrees = true
-	tree := p.Statement()
-	return tree.Accept(&StatementBuilder{}).(*Statement)
 }

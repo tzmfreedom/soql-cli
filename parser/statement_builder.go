@@ -1,6 +1,4 @@
-package main
-
-import "github.com/tzmfreedom/soql-cli/parser"
+package parser
 
 type Statement struct {
 	Type    string
@@ -10,10 +8,10 @@ type Statement struct {
 }
 
 type StatementBuilder struct {
-	*parser.BasedmlVisitor
+	*BasedmlVisitor
 }
 
-func (v *StatementBuilder) VisitStatement(ctx *parser.StatementContext) interface{} {
+func (v *StatementBuilder) VisitStatement(ctx *StatementContext) interface{} {
 	if stmt := ctx.InsertStatement(); stmt != nil {
 		return stmt.Accept(v)
 	}
@@ -23,7 +21,7 @@ func (v *StatementBuilder) VisitStatement(ctx *parser.StatementContext) interfac
 	return ctx.DeleteStatement().Accept(v)
 }
 
-func (v *StatementBuilder) VisitInsertStatement(ctx *parser.InsertStatementContext) interface{} {
+func (v *StatementBuilder) VisitInsertStatement(ctx *InsertStatementContext) interface{} {
 	values := map[string]string{}
 	for i, f := range ctx.AllField() {
 		key := f.Accept(v).(string)
@@ -38,7 +36,7 @@ func (v *StatementBuilder) VisitInsertStatement(ctx *parser.InsertStatementConte
 	}
 }
 
-func (v *StatementBuilder) VisitUpdateStatement(ctx *parser.UpdateStatementContext) interface{} {
+func (v *StatementBuilder) VisitUpdateStatement(ctx *UpdateStatementContext) interface{} {
 	values := map[string]string{}
 	for i, f := range ctx.AllField() {
 		key := f.Accept(v).(string)
@@ -58,7 +56,7 @@ func (v *StatementBuilder) VisitUpdateStatement(ctx *parser.UpdateStatementConte
 	}
 }
 
-func (v *StatementBuilder) VisitDeleteStatement(ctx *parser.DeleteStatementContext) interface{} {
+func (v *StatementBuilder) VisitDeleteStatement(ctx *DeleteStatementContext) interface{} {
 	sobject := ctx.Sobject().Accept(v).(string)
 	var where string
 	if w := ctx.WhereClause(); w != nil {
@@ -71,15 +69,15 @@ func (v *StatementBuilder) VisitDeleteStatement(ctx *parser.DeleteStatementConte
 	}
 }
 
-func (v *StatementBuilder) VisitSobject(ctx *parser.SobjectContext) interface{} {
+func (v *StatementBuilder) VisitSobject(ctx *SobjectContext) interface{} {
 	return ctx.Identifier().GetText()
 }
 
-func (v *StatementBuilder) VisitField(ctx *parser.FieldContext) interface{} {
+func (v *StatementBuilder) VisitField(ctx *FieldContext) interface{} {
 	return ctx.Identifier().GetText()
 }
 
-func (v *StatementBuilder) VisitLiteral(ctx *parser.LiteralContext) interface{} {
+func (v *StatementBuilder) VisitLiteral(ctx *LiteralContext) interface{} {
 	if s := ctx.StringLiteral(); s != nil {
 		str := s.GetText()
 		return str[1 : len(str)-1]

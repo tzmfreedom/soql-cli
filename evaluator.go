@@ -8,13 +8,14 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/tzmfreedom/go-soapforce"
+	"github.com/tzmfreedom/soql-cli/parser"
 )
 
 type Evaluator interface {
 	Select(string) error
-	Insert(*Statement) error
-	Update(*Statement) error
-	Delete(*Statement) error
+	Insert(*parser.Statement) error
+	Update(*parser.Statement) error
+	Delete(*parser.Statement) error
 }
 
 type DefaultEvaluator struct {
@@ -60,7 +61,7 @@ func (e *DefaultEvaluator) Select(q string) error {
 	return nil
 }
 
-func (e *DefaultEvaluator) Insert(stmt *Statement) error {
+func (e *DefaultEvaluator) Insert(stmt *parser.Statement) error {
 	obj := &soapforce.SObject{}
 	obj.Type = stmt.Sobject
 	obj.Fields = map[string]interface{}{}
@@ -82,7 +83,7 @@ func (e *DefaultEvaluator) Insert(stmt *Statement) error {
 	return nil
 }
 
-func (e *DefaultEvaluator) Update(stmt *Statement) error {
+func (e *DefaultEvaluator) Update(stmt *parser.Statement) error {
 	q := fmt.Sprintf("SELECT id FROM %s %s", stmt.Sobject, stmt.Where)
 	r, err := e.Client.Query(q)
 	if err != nil {
@@ -115,7 +116,7 @@ func (e *DefaultEvaluator) Update(stmt *Statement) error {
 	return nil
 }
 
-func (e *DefaultEvaluator) Delete(stmt *Statement) error {
+func (e *DefaultEvaluator) Delete(stmt *parser.Statement) error {
 	q := fmt.Sprintf("SELECT id FROM %s %s", stmt.Sobject, stmt.Where)
 	r, err := e.Client.Query(q)
 	if err != nil {
@@ -180,7 +181,7 @@ func (e *DryRunner) Select(q string) error {
 	return nil
 }
 
-func (e *DryRunner) Insert(stmt *Statement) error {
+func (e *DryRunner) Insert(stmt *parser.Statement) error {
 	fields := make([]string, len(stmt.Values))
 	i := 0
 	for field, value := range stmt.Values {
@@ -191,7 +192,7 @@ func (e *DryRunner) Insert(stmt *Statement) error {
 	return nil
 }
 
-func (e *DryRunner) Update(stmt *Statement) error {
+func (e *DryRunner) Update(stmt *parser.Statement) error {
 	q := fmt.Sprintf("SELECT id FROM %s %s", stmt.Sobject, stmt.Where)
 	r, err := e.Client.Query(q)
 	if err != nil {
@@ -210,7 +211,7 @@ func (e *DryRunner) Update(stmt *Statement) error {
 	return nil
 }
 
-func (e *DryRunner) Delete(stmt *Statement) error {
+func (e *DryRunner) Delete(stmt *parser.Statement) error {
 	q := fmt.Sprintf("SELECT id FROM %s %s", stmt.Sobject, stmt.Where)
 	r, err := e.Client.Query(q)
 	if err != nil {

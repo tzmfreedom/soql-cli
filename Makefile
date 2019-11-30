@@ -19,7 +19,7 @@ build: format
 
 .PHONY: format
 format: import
-	@gofmt -w main.go main_test.go statement_builder.go evaluator.go
+	@gofmt -w main.go parser/parser_test.go parser/statement_builder.go evaluator.go
 
 .PHONY: import
 import:
